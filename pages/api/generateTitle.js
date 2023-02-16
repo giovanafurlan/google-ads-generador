@@ -49,7 +49,7 @@ export default async function (req, res) {
   try {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: generatePrompt(company,resume,audience),
+      prompt: generatePrompt(company, resume, audience),
       temperature: 0.5,
       max_tokens: 1000,
       top_p: 1,
@@ -75,12 +75,13 @@ export default async function (req, res) {
 
 function generatePrompt(company, resume, audience) {
   const capitalizedCompany =
-  company[0].toUpperCase() + company.slice(1).toLowerCase();
+    company[0].toUpperCase() + company.slice(1).toLowerCase();
   const capitalizedResume =
     resume[0].toUpperCase() + resume.slice(1).toLowerCase();
   const capitalizedAudience =
     audience[0].toUpperCase() + audience.slice(1).toLowerCase();
-  return `Write a creative ad for the following company who does a certain service to run on Google Ads aimed at ${capitalizedAudience}}:
-  Company: ${capitalizedCompany}
-  Service: ${capitalizedResume}`;
+  return `Escreva 3 criativos títulos com no máximo 30 caracteres cada e 2 criativos resumos com no máximo 90 caracteres cada, para a referente empresa com seu respectivo resumo que irá rodar no Google Ads com público alvo ${capitalizedAudience}
+
+  Empresa: ${capitalizedCompany}
+  Descrição: ${capitalizedResume}`;
 }
