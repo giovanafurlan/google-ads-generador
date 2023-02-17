@@ -8,6 +8,7 @@ import {
   Grid,
   GridItem,
   Input,
+  ListItem,
   Select,
   Tag,
   TagLabel,
@@ -18,79 +19,139 @@ import {
   AiFillEdit
 } from 'react-icons/ai';
 import Head from "next/head";
+import { v4 as uuidv4 } from "uuid";
+import { getDescriptions, getTitles } from "../services/getApis";
 
 export default function Home() {
 
-  const [isLoading, setIsLoading] = useState(false);
+  const initialList = [
+    {
+      id: "a",
+      name: "Robin"
+    },
+    {
+      id: "b",
+      name: "Dennis"
+    }
+  ];
+
+  const [isLoadingT, setIsLoadingT] = useState(false);
+  const [isLoadingD, setIsLoadingD] = useState(false);
   const [visibility, setVisibility] = useState('hidden');
 
-  const [companyInput, setCompanyInput] = useState("");
-  const [audienceInput, setAudienceInput] = useState("");
-  const [resumeInput, setResumeInput] = useState("");
-  const [result, setResult] = useState();
+  const [company, setCompany] = useState('Webpeak');
+  const [audience, setAudience] = useState('Jovens');
+  const [resume, setResume] = useState('Melhor Ferramenta de SEO para Aumentar o Tráfego Orgânico do seu site');
+  const [resultTitle, setResultTitle] = useState();
+  const [resultDescription, setResultDescription] = useState();
 
-  async function onSubmit(event) {
+  async function onSubmit() {
 
-    event.preventDefault();
+    setIsLoadingT(true);
+    setIsLoadingD(true);
 
-    setIsLoading(true);
+    setVisibility('visible');
 
-    try {
-      const responseTitle = await fetch("/api/generateTitle", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ company: companyInput, audience: audienceInput, resume: resumeInput }),
-      });
+    getTitles(company, resume, audience)
+      .then((res) => {
+        // console.log(res);
 
-      const data = await responseTitle.json();
+        setIsLoadingT(false);
 
-      if (responseTitle.status !== 200) {
-        throw data.error || new Error(`Request failed with status ${responseTitle.status}`);
-      }
+        const data = res;
 
-      console.log(data.result);
+        console.log(data);
 
-      // setCompanyInput('');
-      // setAudienceInput('');
-      // setResumeInput('');
+        data.choices.forEach(element => {
+          setResultTitle(element.text);
+        })
 
-    } catch (error) {
-      setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoadingT(false);
+        setVisibility('hidden');
+        console.log(err);
+      })
+      .finally();
 
-      console.error(error);
-      alert(error.message);
+    getDescriptions(company, resume, audience)
+      .then((res) => {
+        // console.log(res);
+
+        setIsLoadingD(false);
+
+        const data = res;
+
+        console.log(data);
+
+        data.choices.forEach(element => {
+          setResultDescription(element.text);
+        })
+
+      })
+      .catch((err) => {
+        setIsLoadingD(false);
+        setVisibility('hidden');
+        console.log(err);
+      })
+      .finally();
+  }
+
+  const [list, setList] = useState(initialList);
+  const [name, setname] = useState("");
+
+  const handleChange = (event) => {
+    setname(event.target.value);
+  }
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      // const newList = list.concat({ name, id: uuidv4() });
+      // setList(newList);
+      // setname("");
+      handleAdd();
     }
   }
+
+  const handleAdd = () => {
+    const newList = list.concat({ name, id: uuidv4() });
+    setList(newList);
+    setname("");
+  }
+
+  const deleteItem = (id) => () => {
+   
+      setList(todos => todos.filter((item) => item.id !== id));
+    
+  };
 
   const fields = [
     {
       isRequired: true,
       id: 'company',
       title: 'Company Name',
-      value: companyInput,
-      onChange: (e) => setCompanyInput(e.target.value)
+      value: company,
+      onChange: (e) => setCompany(e.target.value)
     },
     {
       isRequired: true,
       id: 'audience',
       title: 'Audience',
-      value: audienceInput,
-      onChange: (e) => setAudienceInput(e.target.value)
+      value: audience,
+      onChange: (e) => setAudience(e.target.value)
     },
     {
       isRequired: true,
       id: 'description',
       title: 'Company Description',
-      value: resumeInput,
-      onChange: (e) => setResumeInput(e.target.value)
+      value: resume,
+      onChange: (e) => setResume(e.target.value)
     },
     // {
     //   isRequired: true,
     //   id: 'keywords',
     //   title: 'Product Keywords',
-    //   value: '',
+    //   value: name,
     //   onChange: ''
     // },
     // {
@@ -154,29 +215,28 @@ export default function Home() {
         gap='4'>
         <GridItem
           p='10'>
-          <form
-            onSubmit={onSubmit}>
+          <form>
             <VStack
               spacing={'10'}>
               {/* <Flex
-              gap='4'>
-              <FormLabel
-                htmlFor='input'>
-                Input Language
-              </FormLabel>
-              <Select
-                id='input'>
-                <option value=""></option>
-              </Select>
-              <FormLabel
-                htmlFor='output'>
-                Input Language
-              </FormLabel>
-              <Select
-                id='output'>
-                <option value=""></option>
-              </Select>
-            </Flex> */}
+                gap='4'>
+                <FormLabel
+                  htmlFor='input'>
+                  Input Language
+                </FormLabel>
+                <Select
+                  id='input'>
+                  <option value=""></option>
+                </Select>
+                <FormLabel
+                  htmlFor='output'>
+                  Input Language
+                </FormLabel>
+                <Select
+                  id='output'>
+                  <option value=""></option>
+                </Select>
+              </Flex> */}
               {fields.map((item, idx) => (
                 <Field
                   key={idx}
@@ -186,10 +246,29 @@ export default function Home() {
                   value={item.value}
                   onChange={item.onChange} />
               ))}
+              <Flex
+                align={'center'}
+                gap='8'>
+                <Field
+                  title={'Keywords to Add'}
+                  isRequired={true}
+                  value={name}
+                  onChange={handleChange}
+                  onAdd={handleAdd}
+                  handleKeyDown={handleKeyDown} />
+                <Button
+                  type="button"
+                  onClick={handleAdd}
+                  mt='8'>
+                  Add
+                </Button>
+              </Flex>
+              <List
+                list={list}
+                handleDelete={deleteItem(list.id)} />
               <Button
-                type='submit'
                 value='Generate'
-                disabled={isLoading}>
+                onClick={() => { onSubmit() }}>
                 Generate
               </Button>
             </VStack>
@@ -197,64 +276,71 @@ export default function Home() {
         </GridItem>
         <GridItem
           colSpan={'2'}>
-          {isLoading
-            ?
-            <CircularProgress
-              isIndeterminate />
-            :
-            <VStack
-              visibility={visibility}
-              border={'1px'}
-              borderColor='gray.700'
-              bg='gray.700'
-              borderRadius={'lg'}
-              m='12'
-              p='4'
-              spacing={'4'}
-              alignItems={'initial'}>
+          <VStack
+            visibility={visibility}
+            border={'1px'}
+            borderColor='gray.700'
+            bg='gray.700'
+            borderRadius={'lg'}
+            m='12'
+            p='4'
+            spacing={'4'}
+            alignItems={'initial'}>
+            {isLoadingT
+              ?
+              <CircularProgress
+                isIndeterminate />
+              :
               <Text
-                color={'blue'}
+                color={'blue.400'}
                 fontSize='lg'>
-                {result}
+                {resultTitle}
               </Text>
+            }
+            {isLoadingD
+              ?
+              <CircularProgress
+                isIndeterminate />
+              :
               <Text>
-
+                {resultDescription}
               </Text>
-              <Flex
-                gap='2'>
-                {notesHeadline.map((item, idx) => (
-                  <Note
-                    key={idx}
-                    color={item.color}
-                    title={item.title}
-                    total={item.total}
-                    cont={item.cont} />
-                ))}
-              </Flex>
-              <Flex
-                gap='2'>
-                {notesDescripton.map((item, idx) => (
-                  <Note
-                    key={idx}
-                    color={item.color}
-                    title={item.title}
-                    total={item.total}
-                    cont={item.cont} />
-                ))}
-              </Flex>
-              <Button
-                w='min-content'
-                p='0'>
-                <AiFillEdit color='black' />
-              </Button>
-            </VStack>}
+            }
+            <Flex
+              gap='2'>
+              {notesHeadline.map((item, idx) => (
+                <Note
+                  key={idx}
+                  color={item.color}
+                  title={item.title}
+                  total={item.total}
+                  cont={item.cont} />
+              ))}
+            </Flex>
+            <Flex
+              gap='2'>
+              {notesDescripton.map((item, idx) => (
+                <Note
+                  key={idx}
+                  color={item.color}
+                  title={item.title}
+                  total={item.total}
+                  cont={item.cont} />
+              ))}
+            </Flex>
+            <Button
+              w='min-content'
+              p='0'>
+              <AiFillEdit color='black' />
+            </Button>
+          </VStack>
         </GridItem>
       </Grid>
     </div>
   )
 }
 
-const Field = ({ isRequired, id, title, value, onChange }) => {
+const Field = ({ isRequired, id, title, value, onChange, handleKeyDown }) => {
   return (
     <FormControl
       isRequired={isRequired}>
@@ -262,10 +348,14 @@ const Field = ({ isRequired, id, title, value, onChange }) => {
         htmlFor={id}>
         {title}
       </FormLabel>
-      <Input
-        id={id}
-        value={value}
-        onChange={onChange} />
+      <Flex
+        gap='2'>
+        <Input
+          id={id}
+          value={value}
+          onChange={onChange}
+          onKeyDown={handleKeyDown} />
+      </Flex>
     </FormControl>
   )
 }
@@ -280,3 +370,15 @@ const Note = ({ color, title, total, cont }) => {
     </Tag>
   )
 }
+
+const List = ({ list, handleDelete }) => {
+  return (
+    <Flex
+      flexWrap={'wrap'}
+      gap='4'>
+      {list.map((item) => {
+        return <Text key={item.id}>{item.name} <span onClick={handleDelete} style={{ color: 'red', cursor: 'pointer' }}>X</span></Text>;
+      })}
+    </Flex>
+  );
+};

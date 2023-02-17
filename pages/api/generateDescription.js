@@ -80,8 +80,8 @@ function generatePrompt(company, resume, audience) {
     resume[0].toUpperCase() + resume.slice(1).toLowerCase();
   const capitalizedAudience =
     audience[0].toUpperCase() + audience.slice(1).toLowerCase();
-  return `Escreva três criativos resumos com no máximo 90 caracteres cada, em uma única string, para a referente empresa com sua respectiva descrição que irá rodar no Google Ads com público alvo ${capitalizedAudience}
+  return `Escreva 2 criativos resumos com no máximo 90 caracteres cada, para a referente empresa com seu respectivo resumo que irá rodar no Google Ads com público alvo ${capitalizedAudience}
 
-  Empresa: ${capitalizedCompany}
-  Descrição: ${capitalizedResume}`;
+    Empresa: ${capitalizedCompany}
+    Descrição: ${capitalizedResume}`;
 }
