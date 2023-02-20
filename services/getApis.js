@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const getTitles = async (company, resume, audience) => {
+const getTitles = async (company, resume, audience, keywords, avoidKeywords) => {
   return axios
-    .get("/api/generateT", {
-      params: { company: company, resume: resume, audience: audience },
+    .get("/api/generateTitle", {
+      params: { company: company, resume: resume, audience: audience, keywords: keywords, avoidKeywords: avoidKeywords },
     })
     .then((e) => {
       return e.data;
@@ -14,10 +14,10 @@ const getTitles = async (company, resume, audience) => {
     });
 };
 
-const getDescriptions = async (company, resume, audience) => {
+const getDescriptions = async (company, resume, audience, keywords, avoidKeywords) => {
   return axios
-    .get("/api/generateD", {
-      params: { company: company, resume: resume, audience: audience },
+    .get("/api/generateDescription", {
+      params: { company: company, resume: resume, audience: audience, keywords: keywords, avoidKeywords: avoidKeywords },
     })
     .then((e) => {
       return e.data;

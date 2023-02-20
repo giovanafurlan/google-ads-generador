@@ -8,7 +8,6 @@ import {
   Grid,
   GridItem,
   Input,
-  ListItem,
   Select,
   Tag,
   TagLabel,
@@ -19,21 +18,9 @@ import {
   AiFillEdit
 } from 'react-icons/ai';
 import Head from "next/head";
-import { v4 as uuidv4 } from "uuid";
 import { getDescriptions, getTitles } from "../services/getApis";
 
 export default function Home() {
-
-  const initialList = [
-    {
-      id: "a",
-      name: "Robin"
-    },
-    {
-      id: "b",
-      name: "Dennis"
-    }
-  ];
 
   const [isLoadingT, setIsLoadingT] = useState(false);
   const [isLoadingD, setIsLoadingD] = useState(false);
@@ -42,8 +29,16 @@ export default function Home() {
   const [company, setCompany] = useState('Webpeak');
   const [audience, setAudience] = useState('Jovens');
   const [resume, setResume] = useState('Melhor Ferramenta de SEO para Aumentar o Tráfego Orgânico do seu site');
-  const [resultTitle, setResultTitle] = useState();
-  const [resultDescription, setResultDescription] = useState();
+  const [resultTitle, setResultTitle] = useState([]);
+  const [resultDescription, setResultDescription] = useState([]);
+
+  const [keywords, setKeywords] = useState(['SEO', 'Site']);
+  const [id, setId] = useState(1);
+  const [name, setName] = useState('');
+
+  const [avoidKeywords, setAvoidKeywords] = useState(['Ruim', 'Péssimo']);
+  const [id2, setId2] = useState(1);
+  const [name2, setName2] = useState('');
 
   async function onSubmit() {
 
@@ -52,7 +47,7 @@ export default function Home() {
 
     setVisibility('visible');
 
-    getTitles(company, resume, audience)
+    getTitles(company, resume, audience, keywords, avoidKeywords)
       .then((res) => {
         // console.log(res);
 
@@ -74,7 +69,7 @@ export default function Home() {
       })
       .finally();
 
-    getDescriptions(company, resume, audience)
+    getDescriptions(company, resume, audience, keywords, avoidKeywords)
       .then((res) => {
         // console.log(res);
 
@@ -95,35 +90,46 @@ export default function Home() {
         console.log(err);
       })
       .finally();
+
+    setCompany('');
+    setAudience('');
+    setResume('');
+    // setKeywords('');
+    // setAvoidKeywords('');
   }
 
-  const [list, setList] = useState(initialList);
-  const [name, setname] = useState("");
+  const handleAddClick = (event) => {
+    event.preventDefault();
+    if (name != '') {
+      setId(id => id + 1);
+      setKeywords(list => [...list, id + '- ' + name]);
+      setName('');
+    }
 
-  const handleChange = (event) => {
-    setname(event.target.value);
-  }
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      // const newList = list.concat({ name, id: uuidv4() });
-      // setList(newList);
-      // setname("");
-      handleAdd();
+    if (name2 != '') {
+      setId2(id => id + 1);
+      setAvoidKeywords(list => [...list, id2 + '- ' + name2]);
+      setName2('');
     }
   }
 
-  const handleAdd = () => {
-    const newList = list.concat({ name, id: uuidv4() });
-    setList(newList);
-    setname("");
+  const handleClear = () => {
+    setId(0);
+    setKeywords([]);
   }
 
-  const deleteItem = (id) => () => {
-   
-      setList(todos => todos.filter((item) => item.id !== id));
-    
-  };
+  const handleClear2 = () => {
+    setId2(0);
+    setAvoidKeywords([]);
+  }
+
+  const handleEdit = () => {
+    const titles = resultTitle?.split('/');
+    const descriptions = resultDescription?.split('/');
+
+    console.log(titles);
+    console.log(descriptions);
+  }
 
   const fields = [
     {
@@ -146,21 +152,7 @@ export default function Home() {
       title: 'Company Description',
       value: resume,
       onChange: (e) => setResume(e.target.value)
-    },
-    // {
-    //   isRequired: true,
-    //   id: 'keywords',
-    //   title: 'Product Keywords',
-    //   value: name,
-    //   onChange: ''
-    // },
-    // {
-    //   isRequired: true,
-    //   id: 'avoid',
-    //   title: 'Keywords to Avoid',
-    //   value: '',
-    //   onChange: ''
-    // }
+    }
   ]
 
   const notesHeadline = [
@@ -208,16 +200,18 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>OpenAI Quickstart</title>
+        <title>OpenAI</title>
       </Head>
       <Grid
-        templateColumns={'repeat(3,1fr)'}
+        templateColumns={{
+          lg: 'repeat(3,1fr)'
+        }}
         gap='4'>
         <GridItem
           p='10'>
           <form>
             <VStack
-              spacing={'10'}>
+              spacing={'6'}>
               {/* <Flex
                 gap='4'>
                 <FormLabel
@@ -226,7 +220,7 @@ export default function Home() {
                 </FormLabel>
                 <Select
                   id='input'>
-                  <option value=""></option>
+                  <option value=''></option>
                 </Select>
                 <FormLabel
                   htmlFor='output'>
@@ -234,7 +228,7 @@ export default function Home() {
                 </FormLabel>
                 <Select
                   id='output'>
-                  <option value=""></option>
+                  <option value=''></option>
                 </Select>
               </Flex> */}
               {fields.map((item, idx) => (
@@ -247,25 +241,99 @@ export default function Home() {
                   onChange={item.onChange} />
               ))}
               <Flex
-                align={'center'}
-                gap='8'>
-                <Field
-                  title={'Keywords to Add'}
-                  isRequired={true}
-                  value={name}
-                  onChange={handleChange}
-                  onAdd={handleAdd}
-                  handleKeyDown={handleKeyDown} />
-                <Button
-                  type="button"
-                  onClick={handleAdd}
-                  mt='8'>
-                  Add
-                </Button>
+                w='full'
+                flexDir={'column'}>
+                <Flex
+                  align={'center'}
+                  gap='4'>
+                  <Field
+                    title={'Keywords to Add'}
+                    isRequired={true}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)} />
+                  <Button
+                    onClick={handleAddClick}
+                    mt='8'>
+                    Add item
+                  </Button>
+                  <Button
+                    onClick={handleClear}
+                    mt='8'>
+                    Clear list
+                  </Button>
+                </Flex>
+                <div>
+                  {keywords.map((item) => {
+                    const handleRemoveClick = () => {
+                      setKeywords(list => list.filter((entry) => entry !== item));
+                    };
+                    return (
+                      <Flex
+                        key={item}
+                        justifyContent={'space-between'}
+                        align='center'>
+                        <Text
+                          fontSize={'lg'}
+                          mt='2'>
+                          {item}
+                        </Text>
+                        <Button
+                          mt='2'
+                          onClick={handleRemoveClick}>
+                          x
+                        </Button>
+                      </Flex>
+                    );
+                  })}
+                </div>
               </Flex>
-              <List
-                list={list}
-                handleDelete={deleteItem(list.id)} />
+              <Flex
+                w='full'
+                flexDir={'column'}>
+                <Flex
+                  align={'center'}
+                  gap='4'>
+                  <Field
+                    title={'Keywords to Avoid'}
+                    isRequired={true}
+                    value={name2}
+                    onChange={(e) => setName2(e.target.value)} />
+                  <Button
+                    onClick={handleAddClick}
+                    mt='8'>
+                    Add item
+                  </Button>
+                  <Button
+                    onClick={handleClear2}
+                    mt='8'>
+                    Clear list
+                  </Button>
+                </Flex>
+                <div>
+                  {avoidKeywords.map((item) => {
+                    const handleRemoveClick = () => {
+                      setAvoidKeywords(list => list.filter((entry) => entry !== item));
+                    };
+                    return (
+                      <Flex
+                        key={item}
+                        justifyContent={'space-between'}
+                        align='center'>
+                        <Text
+                          fontSize={'lg'}
+                          mt='2'>
+                          {item}
+                        </Text>
+                        <Button
+                          mt='2'
+                          onClick={handleRemoveClick}>
+                          x
+                        </Button>
+                      </Flex>
+                    );
+                  })}
+                </div>
+              </Flex>
               <Button
                 value='Generate'
                 onClick={() => { onSubmit() }}>
@@ -309,7 +377,7 @@ export default function Home() {
             <Flex
               gap='2'>
               {notesHeadline.map((item, idx) => (
-                <Note
+                <Item
                   key={idx}
                   color={item.color}
                   title={item.title}
@@ -320,7 +388,7 @@ export default function Home() {
             <Flex
               gap='2'>
               {notesDescripton.map((item, idx) => (
-                <Note
+                <Item
                   key={idx}
                   color={item.color}
                   title={item.title}
@@ -329,6 +397,7 @@ export default function Home() {
               ))}
             </Flex>
             <Button
+              onClick={handleEdit}
               w='min-content'
               p='0'>
               <AiFillEdit color='black' />
@@ -340,7 +409,14 @@ export default function Home() {
   )
 }
 
-const Field = ({ isRequired, id, title, value, onChange, handleKeyDown }) => {
+const Field = ({
+  isRequired,
+  id,
+  title,
+  value,
+  onChange,
+  handleKeyDown
+}) => {
   return (
     <FormControl
       isRequired={isRequired}>
@@ -348,37 +424,27 @@ const Field = ({ isRequired, id, title, value, onChange, handleKeyDown }) => {
         htmlFor={id}>
         {title}
       </FormLabel>
-      <Flex
-        gap='2'>
-        <Input
-          id={id}
-          value={value}
-          onChange={onChange}
-          onKeyDown={handleKeyDown} />
-      </Flex>
+      <Input
+        id={id}
+        value={value}
+        onChange={onChange}
+        onKeyDown={handleKeyDown} />
     </FormControl>
   )
 }
 
-const Note = ({ color, title, total, cont }) => {
+const Item = ({
+  color,
+  title,
+  total,
+  cont }) => {
   return (
     <Tag
-      colorScheme={color}>
+      colorScheme={color}
+      fontSize='16px'>
       <TagLabel>
         {title}{' '}{total}/{cont}{' '}char
       </TagLabel>
     </Tag>
   )
 }
-
-const List = ({ list, handleDelete }) => {
-  return (
-    <Flex
-      flexWrap={'wrap'}
-      gap='4'>
-      {list.map((item) => {
-        return <Text key={item.id}>{item.name} <span onClick={handleDelete} style={{ color: 'red', cursor: 'pointer' }}>X</span></Text>;
-      })}
-    </Flex>
-  );
-};
