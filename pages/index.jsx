@@ -25,12 +25,20 @@ export default function Home() {
   const [isLoadingT, setIsLoadingT] = useState(false);
   const [isLoadingD, setIsLoadingD] = useState(false);
   const [visibility, setVisibility] = useState('hidden');
+  const [visibility2, setVisibility2] = useState('hidden');
 
   const [company, setCompany] = useState('Webpeak');
   const [audience, setAudience] = useState('Jovens');
   const [resume, setResume] = useState('Melhor Ferramenta de SEO para Aumentar o Tráfego Orgânico do seu site');
   const [resultTitle, setResultTitle] = useState([]);
   const [resultDescription, setResultDescription] = useState([]);
+
+  const [title1, setTitle1] = useState();
+  const [title2, setTitle2] = useState();
+  const [title3, setTitle3] = useState();
+
+  const [description1, setDescription1] = useState();
+  const [description2, setDescription2] = useState();
 
   const [keywords, setKeywords] = useState(['SEO', 'Site']);
   const [id, setId] = useState(1);
@@ -60,6 +68,8 @@ export default function Home() {
         data.choices.forEach(element => {
           setResultTitle(element.text);
         })
+
+
 
       })
       .catch((err) => {
@@ -124,11 +134,23 @@ export default function Home() {
   }
 
   const handleEdit = () => {
+
+    setVisibility('hidden');
+    setVisibility2('visible');
+
     const titles = resultTitle?.split('/');
     const descriptions = resultDescription?.split('/');
 
+    setTitle1(titles[0]);
+    setTitle2(titles[1]);
+    setTitle3(titles[2]);
+
+    setDescription1(descriptions[0]);
+    setDescription2(descriptions[1]);
+
     console.log(titles);
     console.log(descriptions);
+
   }
 
   const fields = [
@@ -402,6 +424,33 @@ export default function Home() {
               p='0'>
               <AiFillEdit color='black' />
             </Button>
+          </VStack>
+
+          <VStack
+            visibility={visibility2}
+            border={'1px'}
+            borderColor='gray.700'
+            bg='gray.700'
+            borderRadius={'lg'}
+            m='12'
+            p='4'
+            spacing={'4'}
+            alignItems={'initial'}>
+            <Input
+              value={title1}
+              onChange={(e) => setTitle1(e.target.value)} />
+            <Input
+              value={title2}
+              onChange={(e) => setTitle2(e.target.value)} />
+            <Input
+              value={title3}
+              onChange={(e) => setTitle3(e.target.value)} />
+            <Input
+              value={description1}
+              onChange={(e) => setDescription1(e.target.value)} />
+            <Input
+              value={description2}
+              onChange={(e) => setDescription2(e.target.value)} />
           </VStack>
         </GridItem>
       </Grid>
