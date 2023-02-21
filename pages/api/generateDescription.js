@@ -36,7 +36,7 @@ export default function handler(req, res) {
 
   var data = JSON.stringify({
     model: "text-davinci-003",
-    prompt: `Nome da empresa: Google\nAudiência: Jovens\nResumo: empresa de tecnologia multinacional americana com foco em publicidade on-line, tecnologia de mecanismo de pesquisa\nPalavras chaves: Pesquisa,Online\nPalavras para evitar: Devagar,Horrível\nAnúncio Google Ads: A Google é uma empresa de tecnologia multinacional americana focada em publicidade on-line e tecnologia de mecanismo de pesquisa. Alcance jovens de maneira eficaz e obtenha resultados surpreendentes com a Google!/Explore a tecnologia de mecanismo de pesquisa da Google para obter resultados incríveis e alcançar jovens com mais eficiência!\nNome da empresa: ${company}\nAudiência: ${audience}\nResumo: ${resume}\nPalavras chaves: ${keywords}\nPalavras para evitar: ${avoidKeywords}\nnDescrições Anúncio Google Ads: `,
+    prompt: `Nome da empresa: Google\nAudiência: Jovens\nResumo: empresa de tecnologia multinacional americana com foco em publicidade on-line, tecnologia de mecanismo de pesquisa\nPalavras chaves: Pesquisa,Online\nPalavras para evitar: Devagar,Horrível\nDescrições Anúncio Google Ads (máximo 90 caracteres cada):A Google é uma empresa focada em mecanismo de pesquisa. Alcance jovens e obtenha resultados com a Google!/Explore o mecanismo de pesquisa da Google para obter resultados e alcançar jovens com mais eficiência!\nNome da empresa: ${company}\nAudiência: ${audience}\nResumo: ${resume}\nPalavras chaves: ${keywords}\nPalavras para evitar: ${avoidKeywords}\nDescrições Anúncio Google Ads (máximo 90 caracteres cada): `,
     temperature: 0.5,
     max_tokens: 2000,
     top_p: 1,

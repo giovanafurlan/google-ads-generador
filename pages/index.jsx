@@ -26,15 +26,15 @@ export default function Home() {
   const [isLoadingT, setIsLoadingT] = useState(false);
   const [isLoadingD, setIsLoadingD] = useState(false);
   const [visibility, setVisibility] = useState('hidden');
-  const [visibility2, setVisibility2] = useState('hidden');
+  // const [visibility2, setVisibility2] = useState('hidden');
   const [display, setDisplay] = useState('inline');
   const [display2, setDisplay2] = useState('none');
 
   const [company, setCompany] = useState('Webpeak');
   const [audience, setAudience] = useState('Jovens');
   const [resume, setResume] = useState('Melhor Ferramenta de SEO para Aumentar o Tráfego Orgânico do seu site');
-  const [resultTitle, setResultTitle] = useState([]);
-  const [resultDescription, setResultDescription] = useState([]);
+  // const [resultTitle, setResultTitle] = useState([]);
+  // const [resultDescription, setResultDescription] = useState([]);
 
   const [title1, setTitle1] = useState();
   const [title2, setTitle2] = useState();
@@ -147,8 +147,8 @@ export default function Home() {
 
   const handleEdit = () => {
 
-    setVisibility('hidden');
-    setVisibility2('visible');
+    // setVisibility('hidden');
+    // setVisibility2('visible');
 
     setDisplay('none');
     setDisplay2('inline');
@@ -156,8 +156,8 @@ export default function Home() {
 
   const handleSave = () => {
 
-    setVisibility('visible');
-    setVisibility2('hidden');
+    // setVisibility('visible');
+    // setVisibility2('hidden');
 
     setDisplay('inline');
     setDisplay2('none');
@@ -197,19 +197,19 @@ export default function Home() {
     {
       color: '',
       title: 'Headline 1:',
-      total: title1?.length,
+      total: title1?.replace(/\s/g,'').length,
       cont: 30
     },
     {
       color: '',
       title: 'Headline 2:',
-      total: title2?.length,
+      total: title2?.replace(/\s/g,'').length,
       cont: 30
     },
     {
       color: '',
       title: 'Headline 3:',
-      total: title3?.length,
+      total: title3?.replace(/\s/g,'').length,
       cont: 30
     }
   ]
@@ -218,13 +218,13 @@ export default function Home() {
     {
       color: '',
       title: 'Description 1:',
-      total: description1?.length,
+      total: description1?.replace(/\s/g,'').length,
       cont: 90
     },
     {
       color: '',
       title: 'Description 2:',
-      total: description2?.length,
+      total: description2?.replace(/\s/g,'').length,
       cont: 90
     }
   ]
@@ -375,7 +375,8 @@ export default function Home() {
           </form>
         </GridItem>
         <GridItem
-          colSpan={'2'}>
+          colSpan={'2'}
+          visibility={visibility}>
           <VStack
             border={'1px'}
             borderColor='gray.700'

@@ -36,7 +36,7 @@ export default function handler(req, res) {
 
   var data = JSON.stringify({
     model: "text-davinci-003",
-    prompt: `Nome da empresa: Google\nAudiência: Jovens\nResumo: empresa de tecnologia multinacional americana com foco em publicidade on-line, tecnologia de mecanismo de pesquisa\nPalavras chaves: Pesquisa,Online\nPalavras para evitar: Devagar,Horrível\nAnúncio Google Ads: Descubra o Poder da Pesquisa Online com Google/Experimente o Google para Jovens/Transforme Seu Mundo com o Google\nNome da empresa: ${company}\nAudiência: ${audience}\nResumo: ${resume}\nPalavras chaves: ${keywords}\nPalavras para evitar: ${avoidKeywords}\nTítulos Anúncio Google Ads: `,
+    prompt: `Nome da empresa: Google\nAudiência: Jovens\nResumo: empresa de tecnologia multinacional americana com foco em publicidade on-line, tecnologia de mecanismo de pesquisa\nPalavras chaves: Pesquisa,Online\nPalavras para evitar: Devagar,Horrível\nTítulos Anúncio Google Ads (máximo 30 caracteres cada): Descubra o Poder da Pesquisa Google/Experimente o Google para Jovens/Transforme Seu Mundo com o Google\nNome da empresa: ${company}\nAudiência: ${audience}\nResumo: ${resume}\nPalavras chaves: ${keywords}\nPalavras para evitar: ${avoidKeywords}\nTítulos Anúncio Google Ads (máximo 30 caracteres cada): `,
     temperature: 0.5,
     max_tokens: 2000,
     top_p: 1,
