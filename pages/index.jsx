@@ -20,6 +20,7 @@ import {
 } from 'react-icons/ai';
 import Head from "next/head";
 import { getDescriptions, getTitles } from "../services/getApis";
+import DarkLight from './components/DarkLight'
 
 export default function Home() {
 
@@ -112,12 +113,6 @@ export default function Home() {
         console.log(err);
       })
       .finally();
-
-    setCompany('');
-    setAudience('');
-    setResume('');
-    // setKeywords('');
-    // setAvoidKeywords('');
   }
 
   const handleAddClick = (event) => {
@@ -195,36 +190,36 @@ export default function Home() {
     //   cont: ''
     // },
     {
-      color: '',
+      color: title1?.replace(/\s/g, '').length > 30 ? 'red' : 'green',
       title: 'Headline 1:',
-      total: title1?.replace(/\s/g,'').length,
+      total: title1?.replace(/\s/g, '').length,
       cont: 30
     },
     {
-      color: '',
+      color: title3?.replace(/\s/g, '').length > 30 ? 'red' : 'green',
       title: 'Headline 2:',
-      total: title2?.replace(/\s/g,'').length,
+      total: title2?.replace(/\s/g, '').length,
       cont: 30
     },
     {
-      color: '',
+      color: title3?.replace(/\s/g, '').length > 30 ? 'red' : 'green',
       title: 'Headline 3:',
-      total: title3?.replace(/\s/g,'').length,
+      total: title3?.replace(/\s/g, '').length,
       cont: 30
     }
   ]
 
   const itemsDescriptions = [
     {
-      color: '',
+      color: description1?.replace(/\s/g, '').length > 90 ? 'red' : 'green',
       title: 'Description 1:',
-      total: description1?.replace(/\s/g,'').length,
+      total: description1?.replace(/\s/g, '').length,
       cont: 90
     },
     {
-      color: '',
+      color: description2?.replace(/\s/g, '').length > 90 ? 'red' : 'green',
       title: 'Description 2:',
-      total: description2?.replace(/\s/g,'').length,
+      total: description2?.replace(/\s/g, '').length,
       cont: 90
     }
   ]
@@ -244,6 +239,7 @@ export default function Home() {
           <form>
             <VStack
               spacing={'6'}>
+              <DarkLight />
               {/* <Flex
                 gap='4'>
                 <FormLabel
@@ -379,8 +375,7 @@ export default function Home() {
           visibility={visibility}>
           <VStack
             border={'1px'}
-            borderColor='gray.700'
-            bg='gray.700'
+            borderColor='gray.200'
             borderRadius={'lg'}
             p='4'
             spacing={'4'}
@@ -407,30 +402,39 @@ export default function Home() {
                 {description1}/{description2}
               </Text>
             }
-            <Flex
-              gap='2'
-              display={display}>
-              {itemsHeadlines.map((item, idx) => (
-                <Item
-                  key={idx}
-                  color={item.color}
-                  title={item.title}
-                  total={item.total}
-                  cont={item.cont} />
-              ))}
-            </Flex>
-            <Flex
-              gap='2'
-              display={display}>
-              {itemsDescriptions.map((item, idx) => (
-                <Item
-                  key={idx}
-                  color={item.color}
-                  title={item.title}
-                  total={item.total}
-                  cont={item.cont} />
-              ))}
-            </Flex>
+            {isLoadingD
+              ?
+              <CircularProgress
+                isIndeterminate />
+              :
+              <>
+                <Flex
+                  gap='2'
+                  display={display}>
+                  {itemsHeadlines.map((item, idx) => (
+                    <Item
+                      key={idx}
+                      color={item.color}
+                      title={item.title}
+                      total={item.total}
+                      cont={item.cont} />
+                  ))}
+                </Flex>
+                <Flex
+                  gap='2'
+                  display={display}>
+                  {itemsDescriptions.map((item, idx) => (
+                    <Item
+                      key={idx}
+                      color={item.color}
+                      title={item.title}
+                      total={item.total}
+                      cont={item.cont} />
+                  ))}
+                </Flex>
+              </>
+            }
+
             <Button
               onClick={handleEdit}
               display={display}
