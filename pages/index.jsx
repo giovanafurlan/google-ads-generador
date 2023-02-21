@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  Box,
   Button,
   CircularProgress,
   Flex,
@@ -26,6 +27,8 @@ export default function Home() {
   const [isLoadingD, setIsLoadingD] = useState(false);
   const [visibility, setVisibility] = useState('hidden');
   const [visibility2, setVisibility2] = useState('hidden');
+  const [display, setDisplay] = useState('inline');
+  const [display2, setDisplay2] = useState('none');
 
   const [company, setCompany] = useState('Webpeak');
   const [audience, setAudience] = useState('Jovens');
@@ -66,10 +69,14 @@ export default function Home() {
         console.log(data);
 
         data.choices.forEach(element => {
-          setResultTitle(element.text);
+          const el = element.text;
+
+          const titles = el?.split('/');
+
+          setTitle1(titles[0]);
+          setTitle2(titles[1]);
+          setTitle3(titles[2]);
         })
-
-
 
       })
       .catch((err) => {
@@ -90,7 +97,12 @@ export default function Home() {
         console.log(data);
 
         data.choices.forEach(element => {
-          setResultDescription(element.text);
+          const el = element.text;
+
+          const descriptions = el?.split('/');
+
+          setDescription1(descriptions[0]);
+          setDescription2(descriptions[1]);
         })
 
       })
@@ -138,19 +150,17 @@ export default function Home() {
     setVisibility('hidden');
     setVisibility2('visible');
 
-    const titles = resultTitle?.split('/');
-    const descriptions = resultDescription?.split('/');
+    setDisplay('none');
+    setDisplay2('inline');
+  }
 
-    setTitle1(titles[0]);
-    setTitle2(titles[1]);
-    setTitle3(titles[2]);
+  const handleSave = () => {
 
-    setDescription1(descriptions[0]);
-    setDescription2(descriptions[1]);
+    setVisibility('visible');
+    setVisibility2('hidden');
 
-    console.log(titles);
-    console.log(descriptions);
-
+    setDisplay('inline');
+    setDisplay2('none');
   }
 
   const fields = [
@@ -177,45 +187,45 @@ export default function Home() {
     }
   ]
 
-  const notesHeadline = [
-    {
-      color: 'blue',
-      title: 'Readability:',
-      total: '',
-      cont: ''
-    },
+  const itemsHeadlines = [
+    // {
+    //   color: 'blue',
+    //   title: 'Readability:',
+    //   total: '',
+    //   cont: ''
+    // },
     {
       color: '',
       title: 'Headline 1:',
-      total: '',
-      cont: ''
+      total: title1?.length,
+      cont: 30
     },
     {
       color: '',
       title: 'Headline 2:',
-      total: '',
-      cont: ''
+      total: title2?.length,
+      cont: 30
     },
     {
       color: '',
       title: 'Headline 3:',
-      total: '',
-      cont: ''
+      total: title3?.length,
+      cont: 30
     }
   ]
 
-  const notesDescripton = [
+  const itemsDescriptions = [
     {
       color: '',
       title: 'Description 1:',
-      total: '',
-      cont: ''
+      total: description1?.length,
+      cont: 90
     },
     {
       color: '',
       title: 'Description 2:',
-      total: '',
-      cont: ''
+      total: description2?.length,
+      cont: 90
     }
   ]
 
@@ -228,9 +238,9 @@ export default function Home() {
         templateColumns={{
           lg: 'repeat(3,1fr)'
         }}
-        gap='4'>
-        <GridItem
-          p='10'>
+        gap='6'
+        p='4'>
+        <GridItem>
           <form>
             <VStack
               spacing={'6'}>
@@ -367,12 +377,10 @@ export default function Home() {
         <GridItem
           colSpan={'2'}>
           <VStack
-            visibility={visibility}
             border={'1px'}
             borderColor='gray.700'
             bg='gray.700'
             borderRadius={'lg'}
-            m='12'
             p='4'
             spacing={'4'}
             alignItems={'initial'}>
@@ -382,9 +390,10 @@ export default function Home() {
                 isIndeterminate />
               :
               <Text
+                display={display}
                 color={'blue.400'}
                 fontSize='lg'>
-                {resultTitle}
+                {title1}/{title2}/{title3}
               </Text>
             }
             {isLoadingD
@@ -392,13 +401,15 @@ export default function Home() {
               <CircularProgress
                 isIndeterminate />
               :
-              <Text>
-                {resultDescription}
+              <Text
+                display={display}>
+                {description1}/{description2}
               </Text>
             }
             <Flex
-              gap='2'>
-              {notesHeadline.map((item, idx) => (
+              gap='2'
+              display={display}>
+              {itemsHeadlines.map((item, idx) => (
                 <Item
                   key={idx}
                   color={item.color}
@@ -408,8 +419,9 @@ export default function Home() {
               ))}
             </Flex>
             <Flex
-              gap='2'>
-              {notesDescripton.map((item, idx) => (
+              gap='2'
+              display={display}>
+              {itemsDescriptions.map((item, idx) => (
                 <Item
                   key={idx}
                   color={item.color}
@@ -420,37 +432,44 @@ export default function Home() {
             </Flex>
             <Button
               onClick={handleEdit}
+              display={display}
               w='min-content'
               p='0'>
-              <AiFillEdit color='black' />
+              <Box
+                ml='2'>
+                <AiFillEdit color='black' />
+              </Box>
             </Button>
-          </VStack>
-
-          <VStack
-            visibility={visibility2}
-            border={'1px'}
-            borderColor='gray.700'
-            bg='gray.700'
-            borderRadius={'lg'}
-            m='12'
-            p='4'
-            spacing={'4'}
-            alignItems={'initial'}>
-            <Input
-              value={title1}
-              onChange={(e) => setTitle1(e.target.value)} />
-            <Input
-              value={title2}
-              onChange={(e) => setTitle2(e.target.value)} />
-            <Input
-              value={title3}
-              onChange={(e) => setTitle3(e.target.value)} />
-            <Input
-              value={description1}
-              onChange={(e) => setDescription1(e.target.value)} />
-            <Input
-              value={description2}
-              onChange={(e) => setDescription2(e.target.value)} />
+            <Flex
+              flexDir={'column'}
+              display={display2}>
+              <Input
+                value={title1 || ''}
+                my='2'
+                onChange={(e) => setTitle1(e.target.value)} />
+              <Input
+                value={title2 || ''}
+                my='2'
+                onChange={(e) => setTitle2(e.target.value)} />
+              <Input
+                value={title3 || ''}
+                my='2'
+                onChange={(e) => setTitle3(e.target.value)} />
+              <Input
+                value={description1 || ''}
+                my='2'
+                onChange={(e) => setDescription1(e.target.value)} />
+              <Input
+                value={description2 || ''}
+                my='2'
+                onChange={(e) => setDescription2(e.target.value)} />
+              <Button
+                onClick={handleSave}
+                mt='2'
+                w='min-content'>
+                Salvar
+              </Button>
+            </Flex>
           </VStack>
         </GridItem>
       </Grid>
@@ -475,7 +494,7 @@ const Field = ({
       </FormLabel>
       <Input
         id={id}
-        value={value}
+        value={value || ''}
         onChange={onChange}
         onKeyDown={handleKeyDown} />
     </FormControl>
@@ -490,7 +509,8 @@ const Item = ({
   return (
     <Tag
       colorScheme={color}
-      fontSize='16px'>
+      fontSize='16px'
+      mr='2'>
       <TagLabel>
         {title}{' '}{total}/{cont}{' '}char
       </TagLabel>

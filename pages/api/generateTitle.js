@@ -36,9 +36,7 @@ export default function handler(req, res) {
 
   var data = JSON.stringify({
     model: "text-davinci-003",
-    prompt: `Escreva três criativos títulos com no máximo 30 caracteres cada, e separados por uma barra "/", com as seguintes palavras chaves ${keywords} e evitando as palavras ${avoidKeywords}, para a referente empresa com seu respectivo resumo que irá rodar no Google Ads para o público alvo ${audience}
-    Empresa: ${company}
-    Descrição: ${resume}`,
+    prompt: `Nome da empresa: Google\nAudiência: Jovens\nResumo: empresa de tecnologia multinacional americana com foco em publicidade on-line, tecnologia de mecanismo de pesquisa\nPalavras chaves: Pesquisa,Online\nPalavras para evitar: Devagar,Horrível\nAnúncio Google Ads: Descubra o Poder da Pesquisa Online com Google/Experimente o Google para Jovens/Transforme Seu Mundo com o Google\nNome da empresa: ${company}\nAudiência: ${audience}\nResumo: ${resume}\nPalavras chaves: ${keywords}\nPalavras para evitar: ${avoidKeywords}\nTítulos Anúncio Google Ads: `,
     temperature: 0.5,
     max_tokens: 2000,
     top_p: 1,

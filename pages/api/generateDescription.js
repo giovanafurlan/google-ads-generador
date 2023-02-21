@@ -36,9 +36,7 @@ export default function handler(req, res) {
 
   var data = JSON.stringify({
     model: "text-davinci-003",
-    prompt: `Escreva duas criativas descrições com no máximo 90 caracteres cada, e separados por uma barra "/", com as seguintes palavras chaves ${keywords} e evitando as palavras ${avoidKeywords}, para a referente empresa com seu respectivo resumo que irá rodar no Google Ads para o público alvo ${audience}
-    Empresa: ${company}
-    Descrição: ${resume}`,
+    prompt: `Nome da empresa: Google\nAudiência: Jovens\nResumo: empresa de tecnologia multinacional americana com foco em publicidade on-line, tecnologia de mecanismo de pesquisa\nPalavras chaves: Pesquisa,Online\nPalavras para evitar: Devagar,Horrível\nAnúncio Google Ads: A Google é uma empresa de tecnologia multinacional americana focada em publicidade on-line e tecnologia de mecanismo de pesquisa. Alcance jovens de maneira eficaz e obtenha resultados surpreendentes com a Google!/Explore a tecnologia de mecanismo de pesquisa da Google para obter resultados incríveis e alcançar jovens com mais eficiência!\nNome da empresa: ${company}\nAudiência: ${audience}\nResumo: ${resume}\nPalavras chaves: ${keywords}\nPalavras para evitar: ${avoidKeywords}\nnDescrições Anúncio Google Ads: `,
     temperature: 0.5,
     max_tokens: 2000,
     top_p: 1,
