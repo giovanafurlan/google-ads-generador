@@ -13,12 +13,11 @@ import {
   TagLabel,
   Text,
   Textarea,
-  VStack
+  useColorModeValue
 } from "@chakra-ui/react";
 import {
   AiFillEdit
 } from 'react-icons/ai';
-import Head from "next/head";
 import { getDescriptions, getTitles } from "../services/getApis";
 
 export default function Home() {
@@ -165,6 +164,39 @@ export default function Home() {
     }
   ]
 
+  const editFields = [
+    {
+      id: 'title1',
+      title: 'Title 1',
+      value: title1 || '',
+      onChange: (e) => setTitle1(e.target.value)
+    },
+    {
+      id: 'title2',
+      title: 'Title 2',
+      value: title2 || '',
+      onChange: (e) => setTitle2(e.target.value)
+    },
+    {
+      id: 'title3',
+      title: 'Title 3',
+      value: title3 || '',
+      onChange: (e) => setTitle3(e.target.value)
+    },
+    {
+      id: 'description1',
+      title: 'Description 1',
+      value: description1 || '',
+      onChange: (e) => setDescription1(e.target.value)
+    },
+    {
+      id: 'description2',
+      title: 'Description 2',
+      value: description2 || '',
+      onChange: (e) => setDescription2(e.target.value)
+    }
+  ]
+
   const itemsHeadlines = [
     {
       color: title1?.replace(/\s/g, '').length > 30 ? 'red' : 'green',
@@ -201,253 +233,266 @@ export default function Home() {
     }
   ]
 
+  const bg = useColorModeValue('white', 'gray.900');
+  const color = useColorModeValue('primary', 'white');
+
   return (
-    <div>
-      <Head>
-        <title>OpenAI</title>
-      </Head>
-      <Grid
-        templateColumns={{
-          lg: 'repeat(3,1fr)'
-        }}
-        gap='6'
-        p='4'>
-        <GridItem>
-          <form>
-            <VStack
-              spacing={'6'}>
-              {fields.map((item, idx) => (
+    <Grid
+      templateColumns={{
+        lg: 'repeat(3,1fr)'
+      }}
+      gap='6'
+      p='10'>
+      <GridItem>
+        <form>
+          <Flex
+            flexDir={'column'}
+            gap={'4'}>
+            {fields.map((item, idx) => (
+              <Field
+                key={idx}
+                isRequired={item.isRequired}
+                id={item.id}
+                title={item.title}
+                value={item.value}
+                onChange={item.onChange} />
+            ))}
+            <FormControl
+              isRequired={true}>
+              <FormLabel
+                htmlFor={'description'}>
+                Company Description
+              </FormLabel>
+              <Textarea
+                id={'description'}
+                borderRadius={'30px'}
+                rows='6'
+                bg={bg}
+                value={resume || ''}
+                onChange={(e) => setResume(e.target.value)} />
+            </FormControl>
+            <Flex
+              w='full'
+              flexDir={'column'}>
+              <Flex
+                align={'center'}
+                gap='4'>
                 <Field
-                  key={idx}
-                  isRequired={item.isRequired}
-                  id={item.id}
-                  title={item.title}
-                  value={item.value}
-                  onChange={item.onChange} />
-              ))}
-              <FormControl
-                isRequired={true}>
-                <FormLabel
-                  htmlFor={'description'}>
-                  Company Description
-                </FormLabel>
-                <Textarea
-                  id={'description'}
-
-                  value={resume || ''}
-                  onChange={(e) => setResume(e.target.value)} />
-              </FormControl>
-              <Flex
-                w='full'
-                flexDir={'column'}>
-                <Flex
-                  align={'center'}
-                  gap='4'>
-                  <Field
-                    title={'Keywords to Add'}
-                    isRequired={true}
-                    value={name}
-                    onChange={(e) => setName(e.target.value)} />
-                  <Button
-                    onClick={handleAddClick}
-                    mt='8'>
-                    Add item
-                  </Button>
-                  <Button
-                    onClick={handleClear}
-                    mt='8'>
-                    Clear list
-                  </Button>
-                </Flex>
-                <div>
-                  {keywords.map((item) => {
-                    const handleRemoveClick = () => {
-                      setKeywords(list => list.filter((entry) => entry !== item));
-                    };
-                    return (
-                      <Flex
-                        key={item}
-                        justifyContent={'space-between'}
-                        align='center'>
-                        <Text
-                          fontSize={'lg'}
-                          mt='2'>
-                          {item}
-                        </Text>
-                        <Button
-                          mt='2'
-                          onClick={handleRemoveClick}>
-                          x
-                        </Button>
-                      </Flex>
-                    );
-                  })}
-                </div>
+                  title={'Keywords to Add'}
+                  isRequired={true}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)} />
+                <Button
+                  onClick={handleAddClick}
+                  variant='button'
+                  mt='8'>
+                  Add item
+                </Button>
+                <Button
+                  onClick={handleClear}
+                  variant='button-outline'
+                  color={color}
+                  borderColor={color}
+                  mt='8'>
+                  Clear list
+                </Button>
               </Flex>
+              <div>
+                {keywords.map((item) => {
+                  const handleRemoveClick = () => {
+                    setKeywords(list => list.filter((entry) => entry !== item));
+                  };
+                  return (
+                    <Flex
+                      key={item}
+                      justifyContent={'space-between'}
+                      align='center'>
+                      <Text
+                        fontSize={'lg'}
+                        mt='2'>
+                        {item}
+                      </Text>
+                      <Button
+                        mt='2'
+                        onClick={handleRemoveClick}>
+                        x
+                      </Button>
+                    </Flex>
+                  );
+                })}
+              </div>
+            </Flex>
+            <Flex
+              w='full'
+              flexDir={'column'}>
               <Flex
-                w='full'
-                flexDir={'column'}>
-                <Flex
-                  align={'center'}
-                  gap='4'>
-                  <Field
-                    title={'Keywords to Avoid'}
-                    isRequired={true}
-                    value={name2}
-                    onChange={(e) => setName2(e.target.value)} />
-                  <Button
-                    onClick={handleAddClick}
-                    mt='8'>
-                    Add item
-                  </Button>
-                  <Button
-                    onClick={handleClear2}
-                    mt='8'>
-                    Clear list
-                  </Button>
-                </Flex>
-                <div>
-                  {avoidKeywords.map((item) => {
-                    const handleRemoveClick = () => {
-                      setAvoidKeywords(list => list.filter((entry) => entry !== item));
-                    };
-                    return (
-                      <Flex
-                        key={item}
-                        justifyContent={'space-between'}
-                        align='center'>
-                        <Text
-                          fontSize={'lg'}
-                          mt='2'>
-                          {item}
-                        </Text>
-                        <Button
-                          mt='2'
-                          onClick={handleRemoveClick}>
-                          x
-                        </Button>
-                      </Flex>
-                    );
-                  })}
-                </div>
+                align={'center'}
+                gap='4'>
+                <Field
+                  title={'Keywords to Avoid'}
+                  isRequired={true}
+                  value={name2}
+                  onChange={(e) => setName2(e.target.value)} />
+                <Button
+                  onClick={handleAddClick}
+                  variant='button'
+                  mt='8'>
+                  Add item
+                </Button>
+                <Button
+                  onClick={handleClear2}
+                  variant='button-outline'
+                  color={color}
+                  borderColor={color}
+                  mt='8'>
+                  Clear list
+                </Button>
               </Flex>
-              <Button
-                value='Generate'
-                onClick={() => { onSubmit() }}>
-                Generate
-              </Button>
-            </VStack>
-          </form>
-        </GridItem>
-        <GridItem
-          colSpan={'2'}
-          visibility={visibility}>
-          <VStack
-            border={'1px'}
-            borderColor='gray.200'
-            borderRadius={'lg'}
-            p='4'
-            spacing={'4'}
-            alignItems={'initial'}>
-            {isLoadingT
-              ?
-              <CircularProgress
-                isIndeterminate />
-              :
-              <Text
-                display={display}
-                color={'blue.400'}
-                fontSize='lg'>
-                {title1}/{title2}/{title3}
-              </Text>
-            }
-            {isLoadingD
-              ?
-              <CircularProgress
-                isIndeterminate />
-              :
-              <Text
+              <div>
+                {avoidKeywords.map((item) => {
+                  const handleRemoveClick = () => {
+                    setAvoidKeywords(list => list.filter((entry) => entry !== item));
+                  };
+                  return (
+                    <Flex
+                      key={item}
+                      justifyContent={'space-between'}
+                      align='center'>
+                      <Text
+                        fontSize={'lg'}
+                        mt='2'>
+                        {item}
+                      </Text>
+                      <Button
+                        mt='2'
+                        onClick={handleRemoveClick}>
+                        x
+                      </Button>
+                    </Flex>
+                  );
+                })}
+              </div>
+            </Flex>
+            <Button
+              value='Generate'
+              w='100%'
+              mt='4'
+              variant='button-orange'
+              onClick={() => { onSubmit() }}>
+              Generate
+            </Button>
+          </Flex>
+        </form>
+      </GridItem>
+      <GridItem
+        colSpan={'2'}
+        visibility={visibility}>
+        <Flex
+          flexDir={'column'}
+          bg={bg}
+          borderRadius={'30px'}
+          p='4'
+          gap={'4'}
+          alignItems={'initial'}>
+          {isLoadingT
+            ?
+            <CircularProgress
+              isIndeterminate />
+            :
+            <Text
+              display={display}
+              color={'blue.400'}
+              fontSize='lg'>
+              {title1}/{title2}/{title3}
+            </Text>
+          }
+          {isLoadingD
+            ?
+            <CircularProgress
+              isIndeterminate />
+            :
+            <Text
+              display={display}>
+              {description1}/{description2}
+            </Text>
+          }
+          {isLoadingD
+            ?
+            <CircularProgress
+              isIndeterminate />
+            :
+            <>
+              <Flex
+                gap='2'
                 display={display}>
-                {description1}/{description2}
-              </Text>
-            }
-            {isLoadingD
-              ?
-              <CircularProgress
-                isIndeterminate />
-              :
-              <>
-                <Flex
-                  gap='2'
-                  display={display}>
-                  {itemsHeadlines.map((item, idx) => (
-                    <Item
-                      key={idx}
-                      color={item.color}
-                      title={item.title}
-                      total={item.total}
-                      cont={item.cont} />
-                  ))}
-                </Flex>
-                <Flex
-                  gap='2'
-                  display={display}>
-                  {itemsDescriptions.map((item, idx) => (
-                    <Item
-                      key={idx}
-                      color={item.color}
-                      title={item.title}
-                      total={item.total}
-                      cont={item.cont} />
-                  ))}
-                </Flex>
-              </>
-            }
-
+                {itemsHeadlines.map((item, idx) => (
+                  <Item
+                    key={idx}
+                    color={item.color}
+                    title={item.title}
+                    total={item.total}
+                    cont={item.cont} />
+                ))}
+              </Flex>
+              <Flex
+                gap='2'
+                display={display}>
+                {itemsDescriptions.map((item, idx) => (
+                  <Item
+                    key={idx}
+                    color={item.color}
+                    title={item.title}
+                    total={item.total}
+                    cont={item.cont} />
+                ))}
+              </Flex>
+            </>
+          }
+          <Box
+            w='100%'>
             <Button
               onClick={handleEdit}
+              bg='none'
+              border='1px'
+              float={'right'}
+              borderColor={color}
               display={display}
               w='min-content'
               p='0'>
               <Box
                 ml='2'>
-                <AiFillEdit color='black' />
+                <AiFillEdit color={color} />
               </Box>
             </Button>
+          </Box>
+          <Box
+            display={display2}>
             <Flex
               flexDir={'column'}
-              display={display2}>
-              <Input
-                value={title1 || ''}
-                my='2'
-                onChange={(e) => setTitle1(e.target.value)} />
-              <Input
-                value={title2 || ''}
-                my='2'
-                onChange={(e) => setTitle2(e.target.value)} />
-              <Input
-                value={title3 || ''}
-                my='2'
-                onChange={(e) => setTitle3(e.target.value)} />
-              <Input
-                value={description1 || ''}
-                my='2'
-                onChange={(e) => setDescription1(e.target.value)} />
-              <Input
-                value={description2 || ''}
-                my='2'
-                onChange={(e) => setDescription2(e.target.value)} />
-              <Button
-                onClick={handleSave}
-                mt='2'
-                w='min-content'>
-                Salvar
-              </Button>
+              gap='4'>
+              {editFields.map((item, idx) => (
+                <Field
+                  key={idx}
+                  id={item.id}
+                  title={item.title}
+                  value={item.value}
+                  onChange={item.onChange} />
+              ))}
+              <Box
+                w='100%'>
+                <Button
+                  onClick={handleSave}
+                  float='right'
+                  variant='button-orange'
+                  w='min-content'>
+                  Salvar
+                </Button>
+              </Box>
             </Flex>
-          </VStack>
-        </GridItem>
-      </Grid>
-    </div>
+          </Box>
+        </Flex>
+      </GridItem>
+    </Grid>
   )
 }
 
@@ -459,6 +504,8 @@ const Field = ({
   onChange,
   handleKeyDown
 }) => {
+  const bg = useColorModeValue('white', 'gray.900');
+
   return (
     <FormControl
       isRequired={isRequired}>
@@ -467,6 +514,8 @@ const Field = ({
         {title}
       </FormLabel>
       <Input
+        borderRadius={'30px'}
+        bg={bg}
         id={id}
         value={value || ''}
         onChange={onChange}
