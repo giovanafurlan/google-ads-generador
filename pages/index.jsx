@@ -51,6 +51,9 @@ export default function Home() {
   const [id2, setId2] = useState(1);
   const [name2, setName2] = useState('');
 
+  const bg = useColorModeValue('white', 'gray.900');
+  const color = useColorModeValue('primary', 'white');
+  
   async function onSubmit() {
 
     setIsLoadingT(true);
@@ -288,9 +291,6 @@ export default function Home() {
       cont: 90
     }
   ]
-
-  const bg = useColorModeValue('white', 'gray.900');
-  const color = useColorModeValue('primary', 'white');
 
   return (
     <Grid
