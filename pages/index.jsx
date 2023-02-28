@@ -28,22 +28,26 @@ export default function Home() {
   const [display, setDisplay] = useState('inline');
   const [display2, setDisplay2] = useState('none');
 
-  const [company, setCompany] = useState('Webpeak');
-  const [audience, setAudience] = useState('Jovens');
-  const [resume, setResume] = useState('Melhor Ferramenta de SEO para Aumentar o Tráfego Orgânico do seu site');
+  const [company, setCompany] = useState();
+  const [audience, setAudience] = useState();
+  const [resume, setResume] = useState();
 
   const [title1, setTitle1] = useState();
   const [title2, setTitle2] = useState();
   const [title3, setTitle3] = useState();
+  const [title4, setTitle4] = useState();
+  const [title5, setTitle5] = useState();
+  const [title6, setTitle6] = useState();
 
   const [description1, setDescription1] = useState();
   const [description2, setDescription2] = useState();
+  const [description3, setDescription3] = useState();
 
-  const [keywords, setKeywords] = useState(['SEO', 'Site']);
+  const [keywords, setKeywords] = useState([]);
   const [id, setId] = useState(1);
   const [name, setName] = useState('');
 
-  const [avoidKeywords, setAvoidKeywords] = useState(['Ruim', 'Péssimo']);
+  const [avoidKeywords, setAvoidKeywords] = useState([]);
   const [id2, setId2] = useState(1);
   const [name2, setName2] = useState('');
 
@@ -62,7 +66,7 @@ export default function Home() {
 
         const data = res;
 
-        console.log(data);
+        // console.log(data);
 
         data.choices.forEach(element => {
           const el = element.text;
@@ -72,6 +76,9 @@ export default function Home() {
           setTitle1(titles[0]);
           setTitle2(titles[1]);
           setTitle3(titles[2]);
+          setTitle4(titles[3]);
+          setTitle5(titles[4]);
+          setTitle6(titles[5]);
         })
 
       })
@@ -90,7 +97,7 @@ export default function Home() {
 
         const data = res;
 
-        console.log(data);
+        // console.log(data);
 
         data.choices.forEach(element => {
           const el = element.text;
@@ -99,6 +106,7 @@ export default function Home() {
 
           setDescription1(descriptions[0]);
           setDescription2(descriptions[1]);
+          setDescription3(descriptions[2]);
         })
 
       })
@@ -184,6 +192,24 @@ export default function Home() {
       onChange: (e) => setTitle3(e.target.value)
     },
     {
+      id: 'title4',
+      title: 'Title 4',
+      value: title4 || '',
+      onChange: (e) => setTitle4(e.target.value)
+    },
+    {
+      id: 'title5',
+      title: 'Title 5',
+      value: title5 || '',
+      onChange: (e) => setTitle5(e.target.value)
+    },
+    {
+      id: 'title6',
+      title: 'Title 6',
+      value: title6 || '',
+      onChange: (e) => setTitle6(e.target.value)
+    },
+    {
       id: 'description1',
       title: 'Description 1',
       value: description1 || '',
@@ -194,6 +220,12 @@ export default function Home() {
       title: 'Description 2',
       value: description2 || '',
       onChange: (e) => setDescription2(e.target.value)
+    },
+    {
+      id: 'description3',
+      title: 'Description 3',
+      value: description3 || '',
+      onChange: (e) => setDescription3(e.target.value)
     }
   ]
 
@@ -205,7 +237,7 @@ export default function Home() {
       cont: 30
     },
     {
-      color: title3?.replace(/\s/g, '').length > 30 ? 'red' : 'green',
+      color: title2?.replace(/\s/g, '').length > 30 ? 'red' : 'green',
       title: 'Headline 2:',
       total: title2?.replace(/\s/g, '').length,
       cont: 30
@@ -214,6 +246,24 @@ export default function Home() {
       color: title3?.replace(/\s/g, '').length > 30 ? 'red' : 'green',
       title: 'Headline 3:',
       total: title3?.replace(/\s/g, '').length,
+      cont: 30
+    },
+    {
+      color: title4?.replace(/\s/g, '').length > 30 ? 'red' : 'green',
+      title: 'Headline 4:',
+      total: title4?.replace(/\s/g, '').length,
+      cont: 30
+    },
+    {
+      color: title5?.replace(/\s/g, '').length > 30 ? 'red' : 'green',
+      title: 'Headline 5:',
+      total: title5?.replace(/\s/g, '').length,
+      cont: 30
+    },
+    {
+      color: title6?.replace(/\s/g, '').length > 30 ? 'red' : 'green',
+      title: 'Headline 6:',
+      total: title6?.replace(/\s/g, '').length,
       cont: 30
     }
   ]
@@ -229,6 +279,12 @@ export default function Home() {
       color: description2?.replace(/\s/g, '').length > 90 ? 'red' : 'green',
       title: 'Description 2:',
       total: description2?.replace(/\s/g, '').length,
+      cont: 90
+    },
+    {
+      color: description3?.replace(/\s/g, '').length > 90 ? 'red' : 'green',
+      title: 'Description 3:',
+      total: description3?.replace(/\s/g, '').length,
       cont: 90
     }
   ]
@@ -330,7 +386,7 @@ export default function Home() {
                 gap='4'>
                 <Field
                   title={'Keywords to Avoid'}
-                  isRequired={true}
+                  isRequired={false}
                   value={name2}
                   onChange={(e) => setName2(e.target.value)} />
                 <Button
@@ -403,7 +459,7 @@ export default function Home() {
               display={display}
               color={'blue.400'}
               fontSize='lg'>
-              {title1}/{title2}/{title3}
+              {title1}/{title2}/{title3}/{title4}/{title5}/{title6}
             </Text>
           }
           {isLoadingD
@@ -413,7 +469,7 @@ export default function Home() {
             :
             <Text
               display={display}>
-              {description1}/{description2}
+              {description1}/{description2}/{description3}
             </Text>
           }
           {isLoadingD

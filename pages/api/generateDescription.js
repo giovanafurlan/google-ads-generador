@@ -36,7 +36,7 @@ export default function handler(req, res) {
 
   var data = JSON.stringify({
     model: "text-davinci-003",
-    prompt: `Nome da empresa: Google\nAudiência: Jovens\nResumo: empresa de tecnologia multinacional americana com foco em publicidade on-line, tecnologia de mecanismo de pesquisa\nPalavras chaves: Pesquisa,Online\nPalavras para evitar: Devagar,Horrível\nDescrições Anúncio Google Ads (máximo 90 caracteres cada):A Google é uma empresa focada em mecanismo de pesquisa. Alcance jovens e obtenha resultados com a Google!/Explore o mecanismo de pesquisa da Google para obter resultados e alcançar jovens com mais eficiência!\nNome da empresa: ${company}\nAudiência: ${audience}\nResumo: ${resume}\nPalavras chaves: ${keywords}\nPalavras para evitar: ${avoidKeywords}\nDescrições Anúncio Google Ads (máximo 90 caracteres cada): `,
+    prompt: `Nome da empresa: Google\nAudiência: Jovens\nResumo: empresa de tecnologia multinacional americana com foco em publicidade on-line, tecnologia de mecanismo de pesquisa\nPalavras chaves: Pesquisa,Online\nPalavras para evitar: Devagar,Horrível\n3 Descrições Anúncio Google Ads (máximo 90 caracteres cada):A Google é uma empresa focada em mecanismo de pesquisa. Alcance jovens e obtenha resultados com a Google!/Explore o mecanismo de pesquisa da Google para obter resultados e alcançar jovens com mais eficiência!/A Google é uma empresa de tecnologia multinacional americana com foco em publicidade on-line, tecnologia de mecanismo de pesquisa e produtos digitais. Experimente os produtos da Google para jovens!\nNome da empresa: ${company}\nAudiência: ${audience}\nResumo: ${resume}\nPalavras chaves: ${keywords}\nPalavras para evitar: ${avoidKeywords}\n3 Descrições Anúncio Google Ads (máximo 90 caracteres cada): `,
     temperature: 0.5,
     max_tokens: 2000,
     top_p: 1,
@@ -57,7 +57,6 @@ export default function handler(req, res) {
   axios(config)
     .then(function (response) {
       res.status(200).json(response.data);
-      console.log(JSON.stringify(response.data));
     })
     .catch(function (error) {
       console.log(error);

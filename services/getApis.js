@@ -9,7 +9,7 @@ const getTitles = async (company, resume, audience, keywords, avoidKeywords) => 
       return e.data;
     })
     .catch((e) => {
-      // console.log(e);
+      console.log(e);
       return;
     });
 };
@@ -23,7 +23,7 @@ const getDescriptions = async (company, resume, audience, keywords, avoidKeyword
       return e.data;
     })
     .catch((e) => {
-      // console.log(e);
+      console.log(e);
       return;
     });
 };
